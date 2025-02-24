@@ -1,6 +1,5 @@
 package tn.esprit.tpfoyer.config;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -17,28 +16,23 @@ public class ConfigAOP {
 
     @Before("execution(* tn.esprit.tpfoyer.service.*.*(..))")
     public void logMethodEntry(JoinPoint joinPoint) {
-        String name = joinPoint.getSignature().getName();
-        log.info("In Metod AOP : " + name);
+        log.info("Entrée dans la méthode : {}", joinPoint.getSignature().getName());
     }
 
     @After("execution(* tn.esprit.tpfoyer.service.*.add*(..))")
     public void logMethodOut(JoinPoint joinPoint) {
-        String name = joinPoint.getSignature().getName();
-        log.info("Execution Réussie ! ");
+        log.info("Exécution réussie de la méthode : {}", joinPoint.getSignature().getName());
     }
 
     @Around("execution(* tn.esprit.tpfoyer.service.*.*(..))")
-    public Object profile(ProceedingJoinPoint pjp) throws Throwable
-    {
-        long start= System.currentTimeMillis();
+    public Object profile(ProceedingJoinPoint pjp) throws Throwable {
+        long start = System.currentTimeMillis();
 
-        Object obj= pjp.proceed();
+        Object obj = pjp.proceed();
 
-        long elapsedTime= System.currentTimeMillis() -start;
+        long elapsedTime = System.currentTimeMillis() - start;
+        log.info("Temps d'exécution de {} : {} millisecondes", pjp.getSignature().getName(), elapsedTime);
 
-        log.info("Methodexecutiontime: " + elapsedTime+ " milliseconds.");
         return obj;
     }
-
-
 }

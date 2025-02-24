@@ -15,8 +15,8 @@ public class ChambreRestController {
 
     IChambreService chambreService;
 
-// http://localhost:8089/tpfoyer/chambre/retrieve-all-chambres
-     @GetMapping("/retrieve-all-chambres")
+    // http://localhost:8089/tpfoyer/chambre/retrieve-all-chambres
+    @GetMapping("/retrieve-all-chambres")
     public List<Chambre> getChambres() {
         List<Chambre> listChambres = chambreService.retrieveAllChambres();
         return listChambres;
@@ -73,7 +73,6 @@ public class ChambreRestController {
 
 
 
-    // http://localhost:8089/tpfoyer/chambre/retrieve-chambre/8
     @GetMapping("/trouver-chambre-selon-etudiant/{cin}")
     public Chambre trouverChSelonEt(@PathVariable("cin") long cin) {
         Chambre chambre = chambreService.trouverchambreSelonEtudiant(cin);
