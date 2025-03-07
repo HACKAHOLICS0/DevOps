@@ -57,11 +57,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>tn.esprit</groupId>
-            <artifactId>tp-foyer</artifactId>
-            <version>5.0.0</version>
-        </dependency>
+
         <!-- OpenAPI for Spring -->
         <dependency>
             <groupId>org.springdoc</groupId>
