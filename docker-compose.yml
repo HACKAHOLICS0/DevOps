@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  mysql-db:
+    image: mysql:8
+    container_name: mysql-tpfoyer
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tpfoyerdb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - tpfoyer-network
+
+  tp-foyer-app:
+    image: ikramsegni/tp-foyer-app:1.0.0
+    container_name: tp-foyer-app
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/tpfoyerdb?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    ports:
+      - "8089:8089"
+    depends_on:
+      - mysql-db
+    networks:
+      - tpfoyer-network
+
+volumes:
+  mysql_data:
+
+networks:
+  tpfoyer-network:
