@@ -67,14 +67,8 @@
     </dependencies>
 
     <build>
+        <finalName>tp-foyer</finalName>
         <plugins>
-            <!-- Plugin SonarQube -->
-            <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>3.9.1.2184</version> <!-- Vérifie la dernière version disponible -->
-            </plugin>
-
             <!-- Plugin Spring Boot -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -90,4 +84,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

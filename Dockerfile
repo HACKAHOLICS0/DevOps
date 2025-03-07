@@ -5,7 +5,10 @@ FROM openjdk:17-jdk-alpine
 WORKDIR /app
 
 # Ajouter le fichier JAR dans l’image Docker
-COPY target/tp-foyer-1.0.jar app.jar
+ADD target/tp-foyer.jar app.jar
+
+
+
 
 # Exposer le port de l’application (même que dans application.properties)
 EXPOSE 8089
