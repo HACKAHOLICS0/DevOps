@@ -2,7 +2,6 @@ global:
   scrape_interval: 5s
 
 scrape_configs:
-  - job_name: 'tp-foyer'
-    metrics_path: '/actuator/prometheus'
+  - job_name: 'springboot'
     static_configs:
-      - targets: ['tp-foyer-app:8089']
+      - targets: ['springboot-app:8080']  # Remplace par l'URL de ton Spring Boot
