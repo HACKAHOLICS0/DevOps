@@ -33,13 +33,33 @@ services:
   mysqld-exporter:
     image: prom/mysqld-exporter
     container_name: mysqld-exporter
-    restart: always
+    restart: unless-stopped
     environment:
-      - DATA_SOURCE_NAME=root:root@(mysql-db:3306)/
+      - DATA_SOURCE_NAME=root:root@tcp(mysql-db:3306)/tpfoyerdb
     ports:
       - "9104:9104"
     depends_on:
       - mysql-db
+    networks:
+      - tpfoyer-network
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - tpfoyer-network
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
     networks:
       - tpfoyer-network
 
