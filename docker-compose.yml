@@ -1,45 +1,28 @@
 version: '3.8'
 
 services:
-  tp-foyer:
-    image: ahmed049/tp-foyer:5.0.0
-    container_name: tp-foyer-app
-    restart: always
-    ports:
-      - "8089:8089"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/tpfoyerdb?createDatabaseIfNotExist=true
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
-    depends_on:
-      - mysql-db
-    networks:
-      - tpfoyer-network
+  # ... [keep your existing tp-foyer, mysql-db, mysqld-exporter] ...
 
-  mysql-db:
-    image: mysql:8
-    container_name: mysql-db
-    restart: always
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=tpfoyerdb
+  nexus:
+    image: sonatype/nexus3
+    container_name: nexus
+    restart: unless-stopped
     ports:
-      - "3306:3306"
+      - "8081:8081"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - nexus-data:/nexus-data
     networks:
       - tpfoyer-network
 
-  mysqld-exporter:
-    image: prom/mysqld-exporter
-    container_name: mysqld-exporter
+  sonarqube:
+    image: sonarqube
+    container_name: sonarqube
     restart: unless-stopped
     environment:
-      - DATA_SOURCE_NAME=root:root@tcp(mysql-db:3306)/tpfoyerdb
+      - SONAR_CE_JAVAOPTS=-Dsonar.web.javaAdditionalOpts=-Dsonar.prometheus.monitor=true
     ports:
-      - "9104:9104"
-    depends_on:
-      - mysql-db
+      - "9000:9000"
+      - "9092:9092"
     networks:
       - tpfoyer-network
 
@@ -69,3 +52,4 @@ networks:
 
 volumes:
   mysql_data:
+  nexus-data:
