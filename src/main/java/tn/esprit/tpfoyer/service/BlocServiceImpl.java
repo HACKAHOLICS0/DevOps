@@ -1,6 +1,4 @@
 package tn.esprit.tpfoyer.service;
-
-
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +26,7 @@ public class BlocServiceImpl  implements IBlocService {
         log.info("taille totale : " + listB.size());
         for (Bloc b: listB) {
             log.info("Bloc : " + b);
+
         }
 
         return listB;

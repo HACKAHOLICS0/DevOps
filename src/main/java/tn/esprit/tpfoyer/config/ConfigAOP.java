@@ -1,6 +1,9 @@
 package tn.esprit.tpfoyer.config;
 
 
+
+
+
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -23,7 +26,7 @@ public class ConfigAOP {
 
     @After("execution(* tn.esprit.tpfoyer.service.*.add*(..))")
     public void logMethodOut(JoinPoint joinPoint) {
-        String name = joinPoint.getSignature().getName();
+
         log.info("Execution Réussie ! ");
     }
 
@@ -39,6 +42,5 @@ public class ConfigAOP {
         log.info("Methodexecutiontime: " + elapsedTime+ " milliseconds.");
         return obj;
     }
-
 
 }
