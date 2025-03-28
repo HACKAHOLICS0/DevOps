@@ -1,48 +1,45 @@
 version: '3.8'
 
 services:
-  # ... [keep your existing tp-foyer, mysql-db, mysqld-exporter] ...
-
-  nexus:
-    image: sonatype/nexus3
-    container_name: nexus
-    restart: unless-stopped
+  tp-foyer:
+    image: ahmed049/tp-foyer:5.0.0
+    container_name: tp-foyer-app
+    restart: always
     ports:
-      - "8081:8081"
-    volumes:
-      - nexus-data:/nexus-data
-    networks:
-      - tpfoyer-network
-
-  sonarqube:
-    image: sonarqube
-    container_name: sonarqube
-    restart: unless-stopped
+      - "8089:8089"
     environment:
-      - SONAR_CE_JAVAOPTS=-Dsonar.web.javaAdditionalOpts=-Dsonar.prometheus.monitor=true
-    ports:
-      - "9000:9000"
-      - "9092:9092"
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/tpfoyerdb?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - mysql-db
     networks:
       - tpfoyer-network
 
-  prometheus:
-    image: prom/prometheus
-    container_name: prometheus
-    restart: unless-stopped
+  mysql-db:
+    image: mysql:8
+    container_name: mysql-db
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=tpfoyerdb
     ports:
-      - "9090:9090"
+      - "3306:3306"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - mysql_data:/var/lib/mysql
     networks:
       - tpfoyer-network
 
-  grafana:
-    image: grafana/grafana
-    container_name: grafana
-    restart: unless-stopped
+  mysqld-exporter:
+    image: prom/mysqld-exporter
+    container_name: mysqld-exporter
+    restart: always
+    environment:
+      - DATA_SOURCE_NAME=root:root@(mysql-db:3306)/
     ports:
-      - "3000:3000"
+      - "9104:9104"
+    depends_on:
+      - mysql-db
     networks:
       - tpfoyer-network
 
@@ -52,4 +49,3 @@ networks:
 
 volumes:
   mysql_data:
-  nexus-data:
