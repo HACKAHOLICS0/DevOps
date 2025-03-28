@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   tp-foyer:
-    image: ahmed049/tp-foyer
+    image: ahmed049/tp-foyer:5.0.0
     container_name: tp-foyer-app
     restart: always
     ports:
