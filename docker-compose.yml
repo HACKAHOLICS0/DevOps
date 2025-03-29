@@ -99,5 +99,5 @@ volumes:
     driver: local
   grafana-storage:
     driver: local
-  prometheus_data:
+  prometheus_data: 
     driver: local
