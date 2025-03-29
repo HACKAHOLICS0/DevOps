@@ -11,7 +11,8 @@ services:
       - db-data:/var/lib/mysql
 
   app:
-    image: ${DOCKER_IMAGE:-tp-foyer}:latest
+    build: .
+    image: tp-foyer:${TAG:-latest}
     depends_on:
       - db
     ports:
