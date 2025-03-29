@@ -11,6 +11,7 @@ services:
       <<: *common-env
       MYSQL_ROOT_PASSWORD: 
       MYSQL_DATABASE: tpfoyerdb
+      MYSQL_INNODB_FORCE_RECOVERY: 1
     ports:
       - "3306:3306"
     volumes:
