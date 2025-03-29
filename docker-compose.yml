@@ -1,70 +1,87 @@
 version: '3.8'
 
+x-common-env: &common-env
+  TZ: Africa/Tunis  # Set your timezone
+  LANG: en_US.UTF-8
+
 services:
   tp-foyer:
     image: ahmed049/tp-foyer:5.0.0
     container_name: tp-foyer-app
-    restart: always
+    restart: unless-stopped
     ports:
       - "8089:8089"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/tpfoyerdb?createDatabaseIfNotExist=true
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
+      <<: *common-env
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/tpfoyerdb?createDatabaseIfNotExist=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_LIQUIBASE_ENABLED: "true"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8089/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     depends_on:
-      - mysql-db
+      mysql-db:
+        condition: service_healthy
     networks:
       - tpfoyer-network
 
   mysql-db:
-    image: mysql:8
+    image: mysql:8.0
     container_name: mysql-db
-    restart: always
+    restart: unless-stopped
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=tpfoyerdb
+      <<: *common-env
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tpfoyerdb
+      MYSQL_INITDB_SKIP_TZINFO: "1"
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-    networks:
-      - tpfoyer-network
-
-  mysqld-exporter:
-    image: prom/mysqld-exporter
-    container_name: mysqld-exporter
-    restart: always
-    environment:
-      - DATA_SOURCE_NAME=root:root@(mysql-db:3306)/
-    ports:
-      - "9104:9104"
-    depends_on:
-      - mysql-db
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     networks:
       - tpfoyer-network
 
   prometheus:
-    image: prom/prometheus:latest
+    image: prom/prometheus:v2.47.0  # Pinned version
     container_name: prometheus
-    restart: always
+    restart: unless-stopped
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
     networks:
       - tpfoyer-network
 
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:10.2.0  # Pinned version
     container_name: grafana
-    restart: always
+    restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      <<: *common-env
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
     volumes:
       - grafana-storage:/var/lib/grafana
+      - ./monitoring/dashboards:/etc/grafana/provisioning/dashboards
     depends_on:
       - prometheus
     networks:
@@ -73,7 +90,14 @@ services:
 networks:
   tpfoyer-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
 
 volumes:
   mysql_data:
+    driver: local
   grafana-storage:
+    driver: local
+  prometheus_data:
+    driver: local
