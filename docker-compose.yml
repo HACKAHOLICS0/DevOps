@@ -1,11 +1,6 @@
-x-common-env: &common-env
-  TZ: Africa/Tunis
-  LANG: en_US.UTF-8
-
 services:
   mysql-db:
     image: mysql:5.7
-    container_name: mysql-db
     restart: unless-stopped  # Move restart here, not under networks
     environment:
       <<: *common-env
@@ -16,41 +11,27 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root"]
       interval: 10s
       timeout: 20s  # Increased timeout
       retries: 10  # Increased retries
-    networks:
-      - tpfoyer-network
-
+  
   tp-foyer:
     image: ahmed049/tp-foyer:5.0.0
-    container_name: tp-foyer-app
-    restart: unless-stopped  # Move restart here, not under networks
+    restart: on-failure  # Move restart here, not under networks
     ports:
       - "8089:8089"
     environment:
       <<: *common-env
-      SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/tpfoyerdb?createDatabaseIfNotExist=true&useSSL=false
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD:
       SPRING_LIQUIBASE_ENABLED: "true"
     depends_on:
       mysql-db:
-        condition: service_healthy
-    networks:
-      - tpfoyer-network
-
-networks:
-  tpfoyer-network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
 
 volumes:
+  db:
   mysql_data:
     driver: local
