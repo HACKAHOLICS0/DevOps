@@ -3,24 +3,6 @@ x-common-env: &common-env
   LANG: en_US.UTF-8
 
 services:
-  tp-foyer:
-    image: ahmed049/tp-foyer:5.0.0
-    container_name: tp-foyer-app
-    restart: unless-stopped
-    ports:
-      - "8089:8089"
-    environment:
-      <<: *common-env
-      SPRING_PROFILES_ACTIVE: prod
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/tpfoyerdb?createDatabaseIfNotExist=true&useSSL=false
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD:
-      SPRING_LIQUIBASE_ENABLED: "true"
-    depends_on:
-      mysql-db:
-        condition: service_healthy
-    networks:
-      - tpfoyer-network
 
   mysql-db:
     image: mysql:5.7
@@ -28,9 +10,8 @@ services:
     restart: unless-stopped
     environment:
       <<: *common-env
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: 
       MYSQL_DATABASE: tpfoyerdb
-      MYSQL_INITDB_SKIP_TZINFO: "1"
     ports:
       - "3306:3306"
     volumes:
@@ -50,6 +31,26 @@ networks:
     ipam:
       config:
         - subnet: 172.20.0.0/16
+        
+  tp-foyer:
+    image: ahmed049/tp-foyer:5.0.0
+    container_name: tp-foyer-app
+    restart: unless-stopped
+    ports:
+      - "8089:8089"
+    environment:
+      <<: *common-env
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/tpfoyerdb?createDatabaseIfNotExist=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD:
+      SPRING_LIQUIBASE_ENABLED: "true"
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    networks:
+      - tpfoyer-network
+
 
 volumes:
   mysql_data:
