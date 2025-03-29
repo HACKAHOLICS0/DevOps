@@ -3,11 +3,10 @@ x-common-env: &common-env
   LANG: en_US.UTF-8
 
 services:
-
   mysql-db:
     image: mysql:5.7
     container_name: mysql-db
-    restart: unless-stopped
+    restart: unless-stopped  # Move restart here, not under networks
     environment:
       <<: *common-env
       MYSQL_ROOT_PASSWORD: 
@@ -25,17 +24,10 @@ services:
     networks:
       - tpfoyer-network
 
-networks:
-  tpfoyer-network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
-        
   tp-foyer:
     image: ahmed049/tp-foyer:5.0.0
     container_name: tp-foyer-app
-    restart: unless-stopped
+    restart: unless-stopped  # Move restart here, not under networks
     ports:
       - "8089:8089"
     environment:
@@ -51,6 +43,12 @@ networks:
     networks:
       - tpfoyer-network
 
+networks:
+  tpfoyer-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
 
 volumes:
   mysql_data:
