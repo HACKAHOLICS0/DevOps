@@ -1,7 +1,7 @@
 version: '3.8'
 
 x-common-env: &common-env
-  TZ: Africa/Tunis  # Set your timezone
+  TZ: Africa/Tunis
   LANG: en_US.UTF-8
 
 services:
@@ -51,42 +51,6 @@ services:
     networks:
       - tpfoyer-network
 
-  prometheus:
-    image: prom/prometheus:v2.47.0  # Pinned version
-    container_name: prometheus
-    restart: unless-stopped
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus_data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-    networks:
-      - tpfoyer-network
-
-  grafana:
-    image: grafana/grafana:10.2.0  # Pinned version
-    container_name: grafana
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    environment:
-      <<: *common-env
-      GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: admin
-      GF_USERS_ALLOW_SIGN_UP: "false"
-    volumes:
-      - grafana-storage:/var/lib/grafana
-      - ./monitoring/dashboards:/etc/grafana/provisioning/dashboards
-    depends_on:
-      - prometheus
-    networks:
-      - tpfoyer-network
-
 networks:
   tpfoyer-network:
     driver: bridge
@@ -96,8 +60,4 @@ networks:
 
 volumes:
   mysql_data:
-    driver: local
-  grafana-storage:
-    driver: local
-  prometheus_data: 
     driver: local
