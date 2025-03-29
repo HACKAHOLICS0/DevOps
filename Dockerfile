@@ -1,14 +1,14 @@
-# Utilisation de OpenJDK 17 basé sur Alpine
+# Using OpenJDK 17 based on Alpine
 FROM openjdk:17-jdk-alpine
 
-# Définition du répertoire de travail
+# Set working directory
 WORKDIR /app
 
-# Ajouter le fichier JAR dans l’image Docker
-ADD target/tp-foyer-5.0.0-SNAPSHOT.jar app.jar
+# Add the JAR file to Docker image (updated to release version)
+ADD target/tp-foyer-5.0.0.jar app.jar
 
-# Exposer le port de l’application (même que dans application.properties)
+# Expose application port (same as in application.properties)
 EXPOSE 8089
 
-# Commande pour exécuter l’application
+# Command to run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
