@@ -5,7 +5,7 @@ services:
     image: mysql:5.7
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: 
+      MYSQL_ROOT_PASSWORD: your_root_password
       MYSQL_DATABASE: tpfoyerdb
       MYSQL_INNODB_FORCE_RECOVERY: 1
     ports:
@@ -17,7 +17,7 @@ services:
       interval: 10s
       timeout: 20s
       retries: 10
-  
+
   tp-foyer:
     depends_on:
       - mysql-db
@@ -36,6 +36,24 @@ services:
       }'
     stdin_open: true
     tty: true
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    restart: unless-stopped
 
 volumes:
   mysql_data:
