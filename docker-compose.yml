@@ -22,7 +22,8 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8089/actuator/health"]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 15  
+      start_period: 30s  # Allow some buffer time before starting checks
     depends_on:
       mysql-db:
         condition: service_healthy
