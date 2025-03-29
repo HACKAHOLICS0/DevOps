@@ -3,23 +3,35 @@ services:
   db:
     image: mysql:8
     environment:
-      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_ROOT_PASSWORD: rootpassword  # Never leave this empty
       MYSQL_DATABASE: db
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppassword
     ports:
       - "3306:3306"
     volumes:
       - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
 
   app:
     build: .
     image: tp-foyer:${TAG:-latest}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     ports:
       - "8089:8089"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/db?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/db?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: appuser
+      SPRING_DATASOURCE_PASSWORD: apppassword
       SERVER_SERVLET_CONTEXT_PATH: /tpfoyer
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    restart: unless-stopped
 
 volumes:
   db-data:
