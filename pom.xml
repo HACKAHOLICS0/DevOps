@@ -11,7 +11,7 @@
 
     <groupId>tn.esprit</groupId>
     <artifactId>tp-foyer</artifactId>
-    <version>${project.version}</version> <!-- Use project.version instead of version -->
+    <version>1.0.0</version> <!-- Use a fixed version number -->
     <name>tp-foyer</name>
     <description>tp-foyer</description>
 
@@ -102,7 +102,7 @@
             </plugin>
         </plugins>
 
-        <!-- Ensure the JAR name uses project.version -->
-        <finalName>tp-foyer-${project.version}</finalName>
+        <!-- Ensure the JAR name uses a fixed version -->
+        <finalName>tp-foyer-1.0.0</finalName> <!-- Static version -->
     </build>
 </project>
