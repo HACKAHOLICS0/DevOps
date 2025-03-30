@@ -11,7 +11,7 @@
 
     <groupId>tn.esprit</groupId>
     <artifactId>tp-foyer</artifactId>
-    <version>${version}</version> <!-- Version will be set from pipeline dynamically -->
+    <version>${project.version}</version> <!-- Use project.version instead of version -->
     <name>tp-foyer</name>
     <description>tp-foyer</description>
 
@@ -102,7 +102,7 @@
             </plugin>
         </plugins>
 
-        <!-- Ensure the JAR name uses Git commit hash from pipeline -->
-        <finalName>tp-foyer-${version}</finalName>
+        <!-- Ensure the JAR name uses project.version -->
+        <finalName>tp-foyer-${project.version}</finalName>
     </build>
 </project>
