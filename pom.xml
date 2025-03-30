@@ -119,10 +119,8 @@
                 </configuration>
             </plugin>
         </plugins>
-    </build>
 
-    <!-- Ensure the JAR name uses Git commit hash -->
-    <build>
+        <!-- Ensure the JAR name uses Git commit hash -->
         <finalName>tp-foyer-${git.commit.id.abbrev}</finalName>
     </build>
 
