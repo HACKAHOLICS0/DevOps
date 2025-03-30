@@ -5,7 +5,7 @@ services:
     image: mysql:5.7
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: your_root_password
+      MYSQL_ROOT_PASSWORD:
       MYSQL_DATABASE: tpfoyerdb
       MYSQL_INNODB_FORCE_RECOVERY: 1
     ports:
