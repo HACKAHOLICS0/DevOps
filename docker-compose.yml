@@ -37,7 +37,23 @@ services:
     stdin_open: true
     tty: true
 
-  
+  prometheus:
+    image: prom/prometheus
+    restart: unless-stopped
+    volumes:
+      - prometheus_data:/etc/prometheus
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana
+    restart: unless-stopped
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+
 volumes:
   mysql_data:
-    driver: local
+  prometheus_data:
+  grafana_data:
