@@ -12,7 +12,7 @@
 
     <groupId>tn.esprit</groupId>
     <artifactId>tp-foyer</artifactId>
-    <version>5.0.0</version> <!-- Changed from SNAPSHOT to release version -->
+    <version>${git.commit.id.abbrev}</version> <!-- Use Git commit hash -->
     <name>tp-foyer</name>
     <description>tp-foyer</description>
 
