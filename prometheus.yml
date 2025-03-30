@@ -5,4 +5,4 @@ scrape_configs:
   - job_name: 'springboot'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['tp-foyer-app:8089']
+      - targets: ['172.17.0.5:8089']  # Utilise l'IP du conteneur Spring Boot et le port correct
