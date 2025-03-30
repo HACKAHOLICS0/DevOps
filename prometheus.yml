@@ -5,4 +5,8 @@ scrape_configs:
   - job_name: 'springboot'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['172.17.0.5:8089']  # Utilise l'IP du conteneur Spring Boot et le port correct
+      - targets: ['172.17.0.5:8089']    # Assurez-vous que cette adresse est correcte pour votre Spring Boot app
+  - job_name: 'jenkins'
+    metrics_path: '/prometheus'
+    static_configs:
+      - targets: ['192.168.50.4:8080']
