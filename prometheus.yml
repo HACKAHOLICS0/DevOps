@@ -2,10 +2,6 @@ global:
   scrape_interval: 5s
 
 scrape_configs:
-  - job_name: 'springboot'
-    metrics_path: '/actuator/prometheus'
-    static_configs:
-      - targets: ['tp-foyer-app:8089']
   - job_name: 'jenkins'
     metrics_path: '/prometheus'
     static_configs:
