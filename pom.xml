@@ -21,7 +21,6 @@
         <sonar.projectKey>ikram</sonar.projectKey>
         <sonar.host.url>http://192.168.50.4:9000</sonar.host.url> <!-- URL de ton serveur SonarQube -->
         <sonar.token>sqp_16d396d94d92469b153101e6c98786145512d8ad</sonar.token>
-        <sonar.jacoco.reportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.jacoco.reportPaths>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
@@ -126,11 +125,13 @@
                             <goal>report</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/site/jacoco</outputDirectory>
+                            <outputDirectory>${project.build.directory}/jacoco-report</outputDirectory> <!-- Specify output folder -->
+                            <destFile>${project.build.directory}/jacoco.exec</destFile> <!-- Specify the file name for the JaCoCo data -->
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
         <resources>
             <resource>
