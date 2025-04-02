@@ -1,8 +1,12 @@
-global:
-  scrape_interval: 5s
-
 scrape_configs:
-  - job_name: 'jenkins'
-    metrics_path: '/prometheus'
+  - job_name: "prometheus"
     static_configs:
-      - targets: [ '192.168.50.4:8080' ]
+      - targets: ["172.17.0.4:9090"]  # Utilisation de l'adresse IP du conteneur Prometheus
+  - job_name: "jenkins"
+    metrics_path: "/prometheus"
+    static_configs:
+      - targets: ["192.168.50.4:8080"]
+  - job_name: "springboot-app"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: [ "192.168.50.4:8089" ]
