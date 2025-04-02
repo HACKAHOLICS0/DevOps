@@ -125,7 +125,8 @@
                             <goal>report</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/jacoco-report</outputDirectory> <!-- Specify output folder -->
+                            <!-- Change outputDirectory to target/site/jacoco -->
+                            <outputDirectory>${project.build.directory}/site/jacoco</outputDirectory> <!-- Specify output folder -->
                             <destFile>${project.build.directory}/jacoco.exec</destFile> <!-- Specify the file name for the JaCoCo data -->
                         </configuration>
                     </execution>
