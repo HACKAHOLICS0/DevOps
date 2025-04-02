@@ -30,6 +30,8 @@ public class Etudiant {
     @ManyToMany(mappedBy = "etudiants")
     Set<Reservation> reservations;
 
+    public Etudiant(Object o, String jane, String doe, long l, Date date) {
+    }
 }
 
 
