@@ -32,7 +32,7 @@ public class EtudiantServiceImplTest {
     void testRetrieveEtudiant() {
         // Arrange
         Long etudiantId = 1L;
-        Etudiant etudiant = new Etudiant(etudiantId, "John", "Doe", 123456L, new Date());
+        Etudiant etudiant = new Etudiant(1L, "John", "Doe", 123456L, new Date());
         when(etudiantRepository.findById(etudiantId)).thenReturn(Optional.of(etudiant));
 
         // Act
@@ -56,7 +56,7 @@ public class EtudiantServiceImplTest {
     @Test
     void testAddEtudiant() {
         // Arrange
-        Etudiant etudiant = new Etudiant(null, "Jane", "Doe", 654321L, new Date());
+        Etudiant etudiant = new Etudiant(0L, "Jane", "Doe", 654321L, new Date());  // Use a valid long value here
         when(etudiantRepository.save(etudiant)).thenReturn(new Etudiant(1L, "Jane", "Doe", 654321L, new Date()));
 
         // Act

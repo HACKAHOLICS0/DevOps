@@ -20,7 +20,7 @@ public class Etudiant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long idEtudiant;
+    Long idEtudiant;
 
     String nomEtudiant;
     String prenomEtudiant;
@@ -29,9 +29,14 @@ public class Etudiant {
 
     @ManyToMany(mappedBy = "etudiants")
     Set<Reservation> reservations;
-
-    public Etudiant(Object o, String jane, String doe, long l, Date date) {
+    public Etudiant(long idEtudiant, String nomEtudiant, String prenomEtudiant, long cinEtudiant, Date dateNaissance) {
+        this.idEtudiant = idEtudiant;
+        this.nomEtudiant = nomEtudiant;
+        this.prenomEtudiant = prenomEtudiant;
+        this.cinEtudiant = cinEtudiant;
+        this.dateNaissance = dateNaissance;
     }
+
 }
 
 
