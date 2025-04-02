@@ -8,12 +8,11 @@ import org.mockito.*;
 import tn.esprit.tpfoyer.entity.Etudiant;
 import tn.esprit.tpfoyer.repository.EtudiantRepository;
 import tn.esprit.tpfoyer.service.EtudiantServiceImpl;
-import tn.esprit.tpfoyer.service.IEtudiantService;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 import java.util.Date;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class EtudiantServiceImplTest {
@@ -21,7 +20,7 @@ public class EtudiantServiceImplTest {
     @Mock
     private EtudiantRepository etudiantRepository;
 
-    private IEtudiantService etudiantService;
+    private EtudiantServiceImpl etudiantService;
 
     @BeforeEach
     void setUp() {
@@ -42,6 +41,16 @@ public class EtudiantServiceImplTest {
         // Assert
         assertNotNull(result);
         assertEquals("John", result.getNomEtudiant());
+    }
+
+    @Test
+    void testRetrieveEtudiantNotFound() {
+        // Arrange
+        Long etudiantId = 1L;
+        when(etudiantRepository.findById(etudiantId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(NoSuchElementException.class, () -> etudiantService.retrieveEtudiant(etudiantId));
     }
 
     @Test
