@@ -38,7 +38,7 @@ services:
 
   grafana:
     image: grafana/grafana:latest
-    container_name: grafana
+    container_name: grafana-jenkins-pipeline
     ports:
       - "3000:3000"
     environment:
