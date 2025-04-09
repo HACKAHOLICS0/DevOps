@@ -9,6 +9,8 @@ services:
       - "3306:3306"
     volumes:
       - db:/var/lib/mysql
+    networks:
+      - app-network
 
   app-timesheet:
     image: firaszn/tp-foyer:5.0.0
@@ -27,6 +29,8 @@ services:
       }'
     stdin_open: true
     tty: true
+    networks:
+      - app-network
 
   prometheus:
     image: prom/prometheus
@@ -35,6 +39,8 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
+    networks:
+      - app-network
 
   grafana:
     image: grafana/grafana:latest
@@ -48,8 +54,14 @@ services:
       - grafana-storage:/var/lib/grafana
     depends_on:
       - prometheus
+    networks:
+      - app-network
 
 volumes:
   db:
   grafana-storage:
+
+networks:
+  app-network:
+    driver: bridge
 
