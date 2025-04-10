@@ -3,12 +3,22 @@ global:
   evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: 'spring-boot-app'
-    metrics_path: '/actuator/prometheus'
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'spring-boot'
+    metrics_path: '/tpfoyer/actuator/prometheus'
+    scrape_interval: 5s
     static_configs:
       - targets: ['app-timesheet:8099']
+    tls_config:
+      insecure_skip_verify: true
 
   - job_name: 'jenkins'
     metrics_path: '/prometheus'
     static_configs:
       - targets: ['192.168.50.4:8080']
+    basic_auth:
+      username: 'admin'
+      password: '11aa2c7e8c2e5579d5af9641a7b89e6f58'  # Remplacez ceci par votre token API Jenkins

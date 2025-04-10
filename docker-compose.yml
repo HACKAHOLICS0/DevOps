@@ -1,3 +1,4 @@
+version: '3'
 services:
   mysqldb:
     image: mysql:5.7
@@ -9,14 +10,21 @@ services:
       - "3306:3306"
     volumes:
       - db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
     networks:
       - app-network
 
   app-timesheet:
     image: firaszn/tp-foyer:5.0.0
     depends_on:
-      - mysqldb
-    restart: on-failure
+      mysqldb:
+        condition: service_healthy
+    restart: unless-stopped
     ports:
       - "8099:8099"
     environment:
@@ -24,44 +32,50 @@ services:
         "spring.datasource.url": "jdbc:mysql://mysqldb:3306/timesheet_db?createDatabaseIfNotExist=true",
         "spring.datasource.username": "root",
         "spring.datasource.password": "root",
-        "spring.jpa.properties.hibernate.dialect": "org.hibernate.dialect.MySQL5InnoDBDialect",
-        "spring.jpa.hibernate.ddl-auto": "update"
+        "spring.jpa.properties.hibernate.dialect": "org.hibernate.dialect.MySQL8Dialect",
+        "spring.jpa.hibernate.ddl-auto": "update",
+        "management.endpoints.web.exposure.include": "*",
+        "management.endpoint.health.show-details": "always",
+        "management.endpoints.web.base-path": "/actuator",
+        "management.server.port": "8099"
       }'
-    stdin_open: true
-    tty: true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8099/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
     networks:
       - app-network
 
   prometheus:
     image: prom/prometheus
-    container_name: prometheus-${COMPOSE_PROJECT_NAME:-default}
+    ports:
+      - "9091:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    depends_on:
+      - app-timesheet
     networks:
       - app-network
 
   grafana:
-    image: grafana/grafana:latest
-    container_name: grafana-jenkins-pipeline
+    image: grafana/grafana
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
       - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-    volumes:
-      - grafana-storage:/var/lib/grafana
+      - GF_SECURITY_ADMIN_PASSWORD=firas123
     depends_on:
       - prometheus
     networks:
       - app-network
 
-volumes:
-  db:
-  grafana-storage:
-
 networks:
   app-network:
     driver: bridge
 
+volumes:
+  db:
