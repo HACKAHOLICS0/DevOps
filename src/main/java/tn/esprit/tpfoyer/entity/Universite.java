@@ -24,6 +24,8 @@ public class Universite {
     @OneToOne(cascade = CascadeType.ALL)
     Foyer foyer;
 
+    public void setId(Long universiteId) {
+    }
 }
 
 
