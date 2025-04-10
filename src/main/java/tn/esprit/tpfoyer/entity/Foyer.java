@@ -33,6 +33,11 @@ public class Foyer {
             @ToString.Exclude
     Set<Bloc> blocs;
 
+    public Foyer(String foyerC, int i) {
+    }
+
+    public void setId(long l) {
+    }
 }
 
 

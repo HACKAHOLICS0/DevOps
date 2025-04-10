@@ -37,6 +37,9 @@ public class Reservation {
     @ManyToMany
     Set<Etudiant> etudiants;
 
+    public Reservation(String r125, Date date, boolean b) {
+    }
+
 
 
 
