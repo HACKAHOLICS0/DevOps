@@ -1,20 +1,28 @@
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
+  scrape_timeout: 10s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+rule_files:
+  - "alert_rules.yml"  # (optionnel) pour les alertes personnalisées
 
 scrape_configs:
-  - job_name: "prometheus"
+  - job_name: 'prometheus'
     static_configs:
-      - targets: ["localhost:9090"]
-  - job_name: "jenkins"
-    metrics_path: "/prometheus"
-    static_configs:
-      - targets: ["192.168.50.4:8080"]
-  - job_name: "springboot-app"
-    metrics_path: "/tpfoyer/actuator/prometheus"
-    static_configs:
-      - targets: ["192.168.50.4:8089"]
+      - targets: ['localhost:9090']
+
   - job_name: 'spring-boot'
     metrics_path: '/tpfoyer/actuator/prometheus'
     static_configs:
-      - targets: ['host.docker.internal:8080']
+      - targets: ['spring-app:8089']
+
+  - job_name: 'jenkins'
+    metrics_path: '/prometheus'
+    static_configs:
+      - targets: ['jenkins:8080']
+
