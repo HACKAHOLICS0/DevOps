@@ -19,7 +19,7 @@ scrape_configs:
   - job_name: 'spring-boot'
     metrics_path: '/tpfoyer/actuator/prometheus'
     static_configs:
-      - targets: ['app:8089'] //changed from localhost to app
+      - targets: ['app:8089']
 
 
 
