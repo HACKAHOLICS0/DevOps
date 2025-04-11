@@ -32,6 +32,6 @@ services:
 
   grafana:
     image: grafana/grafana
-    container_name: grafana
+    container_name: grafana-devops
     ports:
       - "3000:3000"
