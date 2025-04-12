@@ -43,6 +43,7 @@ services:
       - "3100:3100"
     volumes:
       - ./loki-config.yaml:/etc/loki.yaml
+      - /home/vagrant/loki-wal:/wal
     command: -config.file=/etc/loki.yaml
 
   promtail:
