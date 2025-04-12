@@ -29,22 +29,7 @@ public class Etudiant {
 
     @ManyToMany(mappedBy = "etudiants")
     Set<Reservation> reservations;
-    public Etudiant(String alex, String brown, int i, Date date) {
-    }
 
-    // Setter for cinEtudiant
-    public void setCinEtudiant(long cin) {
-        this.cinEtudiant = cin;
-    }
-
-    public void setCin(Long cin) {
-    }
-
-    public void setNom(String john) {
-    }
-
-    public void setPrenom(String doe) {
-    }
 }
 
 
