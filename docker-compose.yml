@@ -9,8 +9,6 @@ services:
       MYSQL_DATABASE: db
     ports:
       - "3306:3306"
-    networks:
-      - monitoring-network
 
   app:
     image: flokithor/tp-foyer:5.0.0
@@ -23,8 +21,6 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db?createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
-    networks:
-      - monitoring-network
 
   prometheus:
     image: prom/prometheus
@@ -33,19 +29,9 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
-    networks:
-      - monitoring-network
 
   grafana:
     image: grafana/grafana
     container_name: grafana
     ports:
       - "3000:3000"
-    networks:
-      - monitoring-network
-    depends_on:
-      - prometheus
-
-networks:
-  monitoring-network:
-    driver: bridge
