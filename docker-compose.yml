@@ -41,18 +41,19 @@ services:
     container_name: loki
     ports:
       - "3100:3100"
-    command: -config.file=/etc/loki/loki-config.yaml
     volumes:
-      - ./loki-config.yaml:/etc/loki/loki-config.yaml
-  
+      - ./loki-config.yaml:/etc/loki.yaml
+    command: -config.file=/etc/loki.yaml
+
   promtail:
     image: grafana/promtail:2.9.4
     container_name: promtail
     volumes:
       - /var/log:/var/log
       - /etc/machine-id:/etc/machine-id
-      - ./promtail-config.yaml:/etc/promtail/promtail.yaml
+      - ./promtail-config.yaml:/etc/promtail.yaml
       - /var/lib/docker/containers:/var/lib/docker/containers
-    command: -config.file=/etc/promtail/promtail.yaml
+    command: -config.file=/etc/promtail.yaml
+
 
 
