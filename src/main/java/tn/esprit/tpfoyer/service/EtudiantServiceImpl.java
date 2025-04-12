@@ -7,6 +7,7 @@ import tn.esprit.tpfoyer.entity.Etudiant;
 import tn.esprit.tpfoyer.repository.EtudiantRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @AllArgsConstructor
@@ -19,7 +20,8 @@ public class EtudiantServiceImpl implements IEtudiantService {
         return etudiantRepository.findAll();
     }
     public Etudiant retrieveEtudiant(Long etudiantId) {
-        return etudiantRepository.findById(etudiantId).get();
+        return etudiantRepository.findById(etudiantId)
+                .orElseThrow(() -> new NoSuchElementException("Etudiant with ID " + etudiantId + " not found"));
     }
     public Etudiant addEtudiant(Etudiant c) {
         return etudiantRepository.save(c);
