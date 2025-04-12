@@ -21,13 +21,13 @@ public class ConfigAOP {
     @Before("execution(* tn.esprit.tpfoyer.service.*.*(..))")
     public void logMethodEntry(JoinPoint joinPoint) {
         String name = joinPoint.getSignature().getName();
-        log.info("In Metod AOP : " + name);
+        //log.info("In Metod AOP : " + name);
     }
 
     @After("execution(* tn.esprit.tpfoyer.service.*.add*(..))")
     public void logMethodOut(JoinPoint joinPoint) {
 
-        log.info("Execution Réussie ! ");
+       // log.info("Execution Réussie ! ");
     }
 
     @Around("execution(* tn.esprit.tpfoyer.service.*.*(..))")
@@ -39,7 +39,7 @@ public class ConfigAOP {
 
         long elapsedTime= System.currentTimeMillis() -start;
 
-        log.info("Methodexecutiontime: " + elapsedTime+ " milliseconds.");
+       // log.info("Methodexecutiontime: " + elapsedTime+ " milliseconds.");
         return obj;
     }
 
