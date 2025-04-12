@@ -23,7 +23,11 @@ public class Universite {
 
     @OneToOne(cascade = CascadeType.ALL)
     Foyer foyer;
+    public Universite(String universityOfTest, String s, Foyer foyer) {
+    }
 
+    public void setId(Long universiteId) {
+    }
 }
 
 

@@ -43,9 +43,6 @@ public class Reservation {
     /*@ToString.Exclude
     @JsonIgnore*/
 
-    public Reservation(String r125, Date date, boolean b) {
-    }
-
 }
 
 
