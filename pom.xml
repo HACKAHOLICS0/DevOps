@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -12,24 +11,31 @@
 
     <groupId>tn.esprit</groupId>
     <artifactId>tp-foyer</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
+    <version>1.0.0</version> <!-- Use a fixed version number -->
     <name>tp-foyer</name>
     <description>tp-foyer</description>
 
     <properties>
         <java.version>17</java.version>
+        <nexus.repo.url>http://192.168.50.4:8081/repository/maven-releases/</nexus.repo.url>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <!-- Deploy to Nexus -->
+    <!-- Deployment configuration -->
     <distributionManagement>
-        <snapshotRepository>
+        <repository>
             <id>deploymentRepo</id>
-            <name>Nexus Snapshots</name>
-            <url>http://192.168.50.4:8081/repository/maven-snapshots/</url>
-        </snapshotRepository>
+            <name>Nexus Releases</name>
+            <url>${nexus.repo.url}</url>
+        </repository>
     </distributionManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -68,6 +74,7 @@
 
     <build>
         <plugins>
+            <!-- Spring Boot Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -80,6 +87,27 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+            <!-- Deploy Plugin for Nexus -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.1.1</version>
+            </plugin>
+
+            <!-- Maven Release Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
+                </configuration>
+            </plugin>
         </plugins>
+
+        <!-- Ensure the JAR name uses a fixed version -->
+        <finalName>tp-foyer-1.0.0</finalName> <!-- Static version -->
     </build>
 </project>
