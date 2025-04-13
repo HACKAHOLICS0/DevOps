@@ -19,8 +19,10 @@ public class EtudiantServiceImpl implements IEtudiantService {
         return etudiantRepository.findAll();
     }
     public Etudiant retrieveEtudiant(Long etudiantId) {
-        return etudiantRepository.findById(etudiantId).get();
+        return etudiantRepository.findById(etudiantId)
+                .orElseThrow(() -> new RuntimeException("Etudiant not found with id: " + etudiantId));
     }
+
     public Etudiant addEtudiant(Etudiant c) {
         return etudiantRepository.save(c);
     }

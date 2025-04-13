@@ -26,9 +26,10 @@ public class ChambreServiceImpl implements IChambreService {
     }
 
     public Chambre retrieveChambre(Long chambreId) {
-        Chambre c = chambreRepository.findById(chambreId).get();
-        return c;
+        return chambreRepository.findById(chambreId)
+                .orElseThrow(() -> new RuntimeException("Chambre not found with id: " + chambreId));
     }
+
 
     public Chambre addChambre(Chambre c) {
         Chambre chambre = chambreRepository.save(c);
@@ -36,7 +37,6 @@ public class ChambreServiceImpl implements IChambreService {
     }
 
     public Chambre modifyChambre(Chambre c) {
-        Chambre chambre = chambreRepository.save(c);
         return c;
     }
 

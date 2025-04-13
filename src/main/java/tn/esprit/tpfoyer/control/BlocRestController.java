@@ -19,17 +19,14 @@ public class BlocRestController {
     IBlocService blocService;
 
 
-    //http://localhost:8089/tpfoyer/bloc/retrieve-all-blocs
 
     @GetMapping("/retrieve-all-blocs")
     @Operation(description = "WS de récuperation de tous les Blocs ")
     public List<Bloc> getBlocs() {
         return blocService.retrieveAllBlocs();
-        //return listBlocs;
     }
 
 
-    // http://localhost:8089/tpfoyer/bloc/retrieve-bloc/8
     @GetMapping("/retrieve-bloc/{bloc-id}")
     public Bloc retrieveBloc(@PathVariable("bloc-id") Long bId) {
         Bloc bloc = blocService.retrieveBloc(bId);
@@ -37,14 +34,12 @@ public class BlocRestController {
 
     }
 
-    // http://localhost:8089/tpfoyer/bloc/add-bloc
     @PostMapping("/add-bloc")
     public Bloc addBloc(@RequestBody Bloc c) {
         Bloc bloc = blocService.addBloc(c);
         return bloc;
     }
 
-    // http://localhost:8089/tpfoyer/bloc/remove-bloc/{bloc-id}
     @DeleteMapping("/remove-bloc/{bloc-id}")
     public void removeBloc(@PathVariable("bloc-id") Long chId) {
         blocService.removeBloc(chId);

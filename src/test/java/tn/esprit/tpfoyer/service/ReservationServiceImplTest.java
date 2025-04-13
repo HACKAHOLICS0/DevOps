@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-public class ReservationServiceImplTest {
+ class ReservationServiceImplTest {
 
     @Mock
     private ReservationRepository reservationRepository;

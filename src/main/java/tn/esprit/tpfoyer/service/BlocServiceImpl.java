@@ -50,9 +50,10 @@ public class BlocServiceImpl  implements IBlocService {
 
     @Transactional
     public Bloc retrieveBloc(Long blocId) {
-
-        return blocRepository.findById(blocId).get();
+        return blocRepository.findById(blocId)
+                .orElseThrow(() -> new RuntimeException("Bloc not found with id: " + blocId));
     }
+
 
 
     public Bloc addBloc(Bloc c) {

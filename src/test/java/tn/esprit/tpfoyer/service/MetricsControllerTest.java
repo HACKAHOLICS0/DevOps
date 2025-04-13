@@ -11,15 +11,13 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import tn.esprit.controller.MetricsController;
 
 import static org.mockito.Mockito.*; // 👈 import nécessaire
-import static org.mockito.ArgumentMatchers.*; // 👈 import nécessaire
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 
 @WebMvcTest(controllers = tn.esprit.controller.MetricsController.class)
 @Import(tn.esprit.controller.MetricsController.class)
-public class MetricsControllerTest {
+ class MetricsControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
