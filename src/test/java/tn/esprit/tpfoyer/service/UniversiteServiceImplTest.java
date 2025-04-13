@@ -6,9 +6,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import tn.esprit.tpfoyer.entity.Foyer;
 import tn.esprit.tpfoyer.entity.Universite;
+import tn.esprit.tpfoyer.entity.Foyer;
 import tn.esprit.tpfoyer.repository.UniversiteRepository;
+import tn.esprit.tpfoyer.repository.FoyerRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +25,9 @@ class UniversiteServiceImplTest {
     @Mock
     private UniversiteRepository universiteRepository;
 
+    @Mock
+    private FoyerRepository foyerRepository;
+
     @InjectMocks
     private UniversiteServiceImpl universiteService;
 
@@ -34,14 +38,13 @@ class UniversiteServiceImplTest {
     void setUp() {
         universite = new Universite();
         universite.setIdUniversite(1L);
-        universite.setNomUniversite("Universite A");
-        universite.setAdresse("123 Rue Test");
+        universite.setNomUniversite("University A");
+        universite.setAdresse("123 Main St");
 
         foyer = new Foyer();
         foyer.setIdFoyer(1L);
         foyer.setNomFoyer("Foyer A");
-        foyer.setCapaciteFoyer(500);
-        universite.setFoyer(foyer);
+        foyer.setCapaciteFoyer(200);
     }
 
     @Test
@@ -52,8 +55,8 @@ class UniversiteServiceImplTest {
 
         assertNotNull(savedUniversite);
         assertEquals(1L, savedUniversite.getIdUniversite());
-        assertEquals("Universite A", savedUniversite.getNomUniversite());
-        assertEquals("123 Rue Test", savedUniversite.getAdresse());
+        assertEquals("University A", savedUniversite.getNomUniversite());
+        assertEquals("123 Main St", savedUniversite.getAdresse());
 
         verify(universiteRepository, times(1)).save(any(Universite.class));
     }
@@ -80,8 +83,8 @@ class UniversiteServiceImplTest {
 
         assertNotNull(retrievedUniversite);
         assertEquals(1L, retrievedUniversite.getIdUniversite());
-        assertEquals("Universite A", retrievedUniversite.getNomUniversite());
-        assertEquals("123 Rue Test", retrievedUniversite.getAdresse());
+        assertEquals("University A", retrievedUniversite.getNomUniversite());
+        assertEquals("123 Main St", retrievedUniversite.getAdresse());
 
         verify(universiteRepository, times(1)).findById(1L);
     }
@@ -112,8 +115,8 @@ class UniversiteServiceImplTest {
 
         assertNotNull(modifiedUniversite);
         assertEquals(1L, modifiedUniversite.getIdUniversite());
-        assertEquals("Universite A", modifiedUniversite.getNomUniversite());
-        assertEquals("123 Rue Test", modifiedUniversite.getAdresse());
+        assertEquals("University A", modifiedUniversite.getNomUniversite());
+        assertEquals("123 Main St", modifiedUniversite.getAdresse());
 
         verify(universiteRepository, times(1)).save(any(Universite.class));
     }
@@ -121,15 +124,43 @@ class UniversiteServiceImplTest {
     @Test
     void testAffecterFoyerAUniversite() {
         when(universiteRepository.findById(1L)).thenReturn(Optional.of(universite));
+        when(foyerRepository.findById(1L)).thenReturn(Optional.of(foyer));
         when(universiteRepository.save(any(Universite.class))).thenReturn(universite);
 
-        Universite updatedUniversite = universiteService.affecterFoyerAUniversite(1L, 1L);
+        Universite result = universiteService.affecterFoyerAUniversite(1L, 1L);
 
-        assertNotNull(updatedUniversite);
-        assertEquals(1L, updatedUniversite.getIdUniversite());
-        assertEquals(foyer, updatedUniversite.getFoyer());
+        assertNotNull(result);
+        assertEquals(foyer, result.getFoyer());
 
         verify(universiteRepository, times(1)).findById(1L);
+        verify(foyerRepository, times(1)).findById(1L);
         verify(universiteRepository, times(1)).save(any(Universite.class));
+    }
+
+    @Test
+    void testAffecterFoyerAUniversite_UniversiteNotFound() {
+        when(universiteRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Universite result = universiteService.affecterFoyerAUniversite(1L, 1L);
+
+        assertNull(result);
+
+        verify(universiteRepository, times(1)).findById(1L);
+        verify(foyerRepository, never()).findById(any());
+        verify(universiteRepository, never()).save(any());
+    }
+
+    @Test
+    void testAffecterFoyerAUniversite_FoyerNotFound() {
+        when(universiteRepository.findById(1L)).thenReturn(Optional.of(universite));
+        when(foyerRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Universite result = universiteService.affecterFoyerAUniversite(1L, 1L);
+
+        assertNull(result);
+
+        verify(universiteRepository, times(1)).findById(1L);
+        verify(foyerRepository, times(1)).findById(1L);
+        verify(universiteRepository, never()).save(any());
     }
 } 
