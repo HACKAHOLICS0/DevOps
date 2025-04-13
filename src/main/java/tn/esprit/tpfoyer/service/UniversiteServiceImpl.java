@@ -39,12 +39,16 @@ public class UniversiteServiceImpl implements IUniversiteService {
 
     public Universite affecterFoyerAUniversite(Long idUniversite, Long idFoyer) {
         Universite universite = universiteRepository.findById(idUniversite).orElse(null);
-        Foyer foyer = foyerRepository.findById(idFoyer).orElse(null);
-        
-        if (universite != null && foyer != null) {
-            universite.setFoyer(foyer);
-            return universiteRepository.save(universite);
+        if (universite == null) {
+            return null;
         }
-        return null;
+        
+        Foyer foyer = foyerRepository.findById(idFoyer).orElse(null);
+        if (foyer == null) {
+            return null;
+        }
+        
+        universite.setFoyer(foyer);
+        return universiteRepository.save(universite);
     }
 }
