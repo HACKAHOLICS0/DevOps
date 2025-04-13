@@ -1,12 +1,11 @@
 package tn.esprit.tpfoyer.entity;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Set;
-
 
 @Entity
 @Getter
@@ -26,12 +25,12 @@ public class Chambre {
     @Enumerated(EnumType.STRING)
     TypeChambre typeC;
 
-
-
-    @OneToMany
+    @OneToMany(mappedBy = "chambre", cascade = CascadeType.ALL)
+    @JsonIgnore
     Set<Reservation> reservations;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "bloc_id")
+    @JsonIgnore
     Bloc bloc;
-
 }
