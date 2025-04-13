@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*; // 👈 import nécessaire
     @BeforeEach
     void setup() {
         Counter mockCounter = mock(Counter.class);
-        when(meterRegistry.counter(eq("custom_metric"))).thenReturn(mockCounter);
+        when(meterRegistry.counter("custom_metric")).thenReturn(mockCounter);
     }
 
     @Test
