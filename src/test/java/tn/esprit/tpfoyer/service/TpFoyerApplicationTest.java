@@ -2,9 +2,11 @@ package tn.esprit.tpfoyer.service;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import tn.esprit.tpfoyer.TpFoyerApplication;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class TpFoyerApplicationTest {
 
@@ -16,5 +18,6 @@ class TpFoyerApplicationTest {
             TpFoyerApplication.main(args);
         });
     }
+
 
 }
