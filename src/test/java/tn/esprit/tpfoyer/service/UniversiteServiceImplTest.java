@@ -163,4 +163,44 @@ class UniversiteServiceImplTest {
         verify(foyerRepository, times(1)).findById(1L);
         verify(universiteRepository, never()).save(any());
     }
+
+    @Test
+    void testModifyUniversite_WithNullValues() {
+        Universite nullUniversite = new Universite();
+        when(universiteRepository.save(any(Universite.class))).thenReturn(nullUniversite);
+
+        Universite modifiedUniversite = universiteService.modifyUniversite(nullUniversite);
+
+        assertNotNull(modifiedUniversite);
+        verify(universiteRepository, times(1)).save(any(Universite.class));
+    }
+
+    @Test
+    void testRemoveUniversite_WhenUniversiteDoesNotExist() {
+        doNothing().when(universiteRepository).deleteById(999L);
+
+        assertDoesNotThrow(() -> universiteService.removeUniversite(999L));
+        
+        verify(universiteRepository, times(1)).deleteById(999L);
+    }
+
+    @Test
+    void testRetrieveUniversite_WithInvalidId() {
+        when(universiteRepository.findById(999L)).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> universiteService.retrieveUniversite(999L));
+
+        verify(universiteRepository, times(1)).findById(999L);
+    }
+
+    @Test
+    void testAddUniversite_WithNullValues() {
+        Universite emptyUniversite = new Universite();
+        when(universiteRepository.save(any(Universite.class))).thenReturn(emptyUniversite);
+
+        Universite savedUniversite = universiteService.addUniversite(emptyUniversite);
+
+        assertNotNull(savedUniversite);
+        verify(universiteRepository, times(1)).save(any(Universite.class));
+    }
 } 
