@@ -5,18 +5,13 @@ import tn.esprit.tpfoyer.TpFoyerApplication;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-public class TpFoyerApplicationTest {
+class TpFoyerApplicationTest {
 
     @Test
     void mainRunsWithoutException() {
-        // Mock du démarrage, mais ne démarre pas réellement Spring
         assertDoesNotThrow(() -> {
             String[] args = {};
-            try {
-                TpFoyerApplication.main(args);
-            } catch (Exception e) {
-                // ignorer car ce test est uniquement pour la couverture du main()
-            }
+            TpFoyerApplication.main(args); // Si tu veux capturer une exception ici, gère-la autrement
         });
     }
 }
