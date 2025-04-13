@@ -9,8 +9,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
 import tn.esprit.tpfoyer.control.ChambreRestController;
+import tn.esprit.tpfoyer.entity.Bloc;
 import tn.esprit.tpfoyer.entity.Chambre;
 import tn.esprit.tpfoyer.entity.TypeChambre;
 import tn.esprit.tpfoyer.service.IChambreService;
@@ -35,15 +35,23 @@ class ChambreRestControllerTest {
     private ChambreRestController chambreRestController;
 
     private Chambre chambre;
+    private Bloc bloc;
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(chambreRestController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(chambreRestController)
+                .build();
         
+        bloc = new Bloc();
+        bloc.setIdBloc(1L);
+        bloc.setNomBloc("Bloc A");
+        bloc.setCapaciteBloc(100);
+
         chambre = new Chambre();
         chambre.setIdChambre(1L);
         chambre.setNumeroChambre(101);
         chambre.setTypeC(TypeChambre.SIMPLE);
+        chambre.setBloc(bloc);
     }
 
     @Test
@@ -51,7 +59,7 @@ class ChambreRestControllerTest {
         List<Chambre> chambres = Arrays.asList(chambre);
         when(chambreService.retrieveAllChambres()).thenReturn(chambres);
 
-        mockMvc.perform(get("/tpfoyer/chambre/retrieve-all-chambres"))
+        mockMvc.perform(get("/chambre/retrieve-all-chambres"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].idChambre").value(1))
                 .andExpect(jsonPath("$[0].numeroChambre").value(101))
@@ -62,7 +70,7 @@ class ChambreRestControllerTest {
     void testGetChambre() throws Exception {
         when(chambreService.retrieveChambre(1L)).thenReturn(chambre);
 
-        mockMvc.perform(get("/tpfoyer/chambre/retrieve-chambre/1"))
+        mockMvc.perform(get("/chambre/retrieve-chambre/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.idChambre").value(1))
                 .andExpect(jsonPath("$.numeroChambre").value(101))
@@ -73,7 +81,7 @@ class ChambreRestControllerTest {
     void testAddChambre() throws Exception {
         when(chambreService.addChambre(any(Chambre.class))).thenReturn(chambre);
 
-        mockMvc.perform(post("/tpfoyer/chambre/add-chambre")
+        mockMvc.perform(post("/chambre/add-chambre")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"numeroChambre\":101,\"typeC\":\"SIMPLE\"}"))
                 .andExpect(status().isOk())
@@ -84,7 +92,7 @@ class ChambreRestControllerTest {
 
     @Test
     void testRemoveChambre() throws Exception {
-        mockMvc.perform(delete("/tpfoyer/chambre/remove-chambre/1"))
+        mockMvc.perform(delete("/chambre/remove-chambre/1"))
                 .andExpect(status().isOk());
     }
 
@@ -92,7 +100,7 @@ class ChambreRestControllerTest {
     void testModifyChambre() throws Exception {
         when(chambreService.modifyChambre(any(Chambre.class))).thenReturn(chambre);
 
-        mockMvc.perform(put("/tpfoyer/chambre/modify-chambre")
+        mockMvc.perform(put("/chambre/modify-chambre")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"idChambre\":1,\"numeroChambre\":101,\"typeC\":\"SIMPLE\"}"))
                 .andExpect(status().isOk())

@@ -9,9 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
 import tn.esprit.tpfoyer.control.FoyerRestController;
-import tn.esprit.tpfoyer.entity.Bloc;
 import tn.esprit.tpfoyer.entity.Foyer;
 import tn.esprit.tpfoyer.service.IFoyerService;
 
@@ -35,22 +33,16 @@ class FoyerRestControllerTest {
     private FoyerRestController foyerRestController;
 
     private Foyer foyer;
-    private Bloc bloc;
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(foyerRestController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(foyerRestController)
+                .build();
         
         foyer = new Foyer();
         foyer.setIdFoyer(1L);
         foyer.setNomFoyer("Foyer A");
-        foyer.setCapaciteFoyer(500);
-
-        bloc = new Bloc();
-        bloc.setIdBloc(1L);
-        bloc.setNomBloc("Bloc A");
-        bloc.setCapaciteBloc(100);
-        bloc.setFoyer(foyer);
+        foyer.setCapaciteFoyer(200);
     }
 
     @Test
@@ -58,40 +50,40 @@ class FoyerRestControllerTest {
         List<Foyer> foyers = Arrays.asList(foyer);
         when(foyerService.retrieveAllFoyers()).thenReturn(foyers);
 
-        mockMvc.perform(get("/tpfoyer/foyer/retrieve-all-foyers"))
+        mockMvc.perform(get("/foyer/retrieve-all-foyers"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].idFoyer").value(1))
                 .andExpect(jsonPath("$[0].nomFoyer").value("Foyer A"))
-                .andExpect(jsonPath("$[0].capaciteFoyer").value(500));
+                .andExpect(jsonPath("$[0].capaciteFoyer").value(200));
     }
 
     @Test
     void testGetFoyer() throws Exception {
         when(foyerService.retrieveFoyer(1L)).thenReturn(foyer);
 
-        mockMvc.perform(get("/tpfoyer/foyer/retrieve-foyer/1"))
+        mockMvc.perform(get("/foyer/retrieve-foyer/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.idFoyer").value(1))
                 .andExpect(jsonPath("$.nomFoyer").value("Foyer A"))
-                .andExpect(jsonPath("$.capaciteFoyer").value(500));
+                .andExpect(jsonPath("$.capaciteFoyer").value(200));
     }
 
     @Test
     void testAddFoyer() throws Exception {
         when(foyerService.addFoyer(any(Foyer.class))).thenReturn(foyer);
 
-        mockMvc.perform(post("/tpfoyer/foyer/add-foyer")
+        mockMvc.perform(post("/foyer/add-foyer")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"nomFoyer\":\"Foyer A\",\"capaciteFoyer\":500}"))
+                .content("{\"nomFoyer\":\"Foyer A\",\"capaciteFoyer\":200}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.idFoyer").value(1))
                 .andExpect(jsonPath("$.nomFoyer").value("Foyer A"))
-                .andExpect(jsonPath("$.capaciteFoyer").value(500));
+                .andExpect(jsonPath("$.capaciteFoyer").value(200));
     }
 
     @Test
     void testRemoveFoyer() throws Exception {
-        mockMvc.perform(delete("/tpfoyer/foyer/remove-foyer/1"))
+        mockMvc.perform(delete("/foyer/remove-foyer/1"))
                 .andExpect(status().isOk());
     }
 
@@ -99,12 +91,12 @@ class FoyerRestControllerTest {
     void testModifyFoyer() throws Exception {
         when(foyerService.modifyFoyer(any(Foyer.class))).thenReturn(foyer);
 
-        mockMvc.perform(put("/tpfoyer/foyer/modify-foyer")
+        mockMvc.perform(put("/foyer/modify-foyer")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"idFoyer\":1,\"nomFoyer\":\"Foyer A\",\"capaciteFoyer\":500}"))
+                .content("{\"idFoyer\":1,\"nomFoyer\":\"Foyer A\",\"capaciteFoyer\":200}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.idFoyer").value(1))
                 .andExpect(jsonPath("$.nomFoyer").value("Foyer A"))
-                .andExpect(jsonPath("$.capaciteFoyer").value(500));
+                .andExpect(jsonPath("$.capaciteFoyer").value(200));
     }
 } 

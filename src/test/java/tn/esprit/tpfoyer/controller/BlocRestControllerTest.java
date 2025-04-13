@@ -9,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
 import tn.esprit.tpfoyer.control.BlocRestController;
 import tn.esprit.tpfoyer.entity.Bloc;
 import tn.esprit.tpfoyer.entity.Chambre;
@@ -40,7 +39,8 @@ class BlocRestControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(blocRestController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(blocRestController)
+                .build();
         
         bloc = new Bloc();
         bloc.setIdBloc(1L);
@@ -59,7 +59,7 @@ class BlocRestControllerTest {
         List<Bloc> blocs = Arrays.asList(bloc);
         when(blocService.retrieveAllBlocs()).thenReturn(blocs);
 
-        mockMvc.perform(get("/tpfoyer/bloc/retrieve-all-blocs"))
+        mockMvc.perform(get("/bloc/retrieve-all-blocs"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].idBloc").value(1))
                 .andExpect(jsonPath("$[0].nomBloc").value("Bloc A"))
@@ -70,7 +70,7 @@ class BlocRestControllerTest {
     void testGetBloc() throws Exception {
         when(blocService.retrieveBloc(1L)).thenReturn(bloc);
 
-        mockMvc.perform(get("/tpfoyer/bloc/retrieve-bloc/1"))
+        mockMvc.perform(get("/bloc/retrieve-bloc/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.idBloc").value(1))
                 .andExpect(jsonPath("$.nomBloc").value("Bloc A"))
@@ -81,7 +81,7 @@ class BlocRestControllerTest {
     void testAddBloc() throws Exception {
         when(blocService.addBloc(any(Bloc.class))).thenReturn(bloc);
 
-        mockMvc.perform(post("/tpfoyer/bloc/add-bloc")
+        mockMvc.perform(post("/bloc/add-bloc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"nomBloc\":\"Bloc A\",\"capaciteBloc\":100}"))
                 .andExpect(status().isOk())
@@ -92,7 +92,7 @@ class BlocRestControllerTest {
 
     @Test
     void testRemoveBloc() throws Exception {
-        mockMvc.perform(delete("/tpfoyer/bloc/remove-bloc/1"))
+        mockMvc.perform(delete("/bloc/remove-bloc/1"))
                 .andExpect(status().isOk());
     }
 
@@ -100,7 +100,7 @@ class BlocRestControllerTest {
     void testModifyBloc() throws Exception {
         when(blocService.modifyBloc(any(Bloc.class))).thenReturn(bloc);
 
-        mockMvc.perform(put("/tpfoyer/bloc/modify-bloc")
+        mockMvc.perform(put("/bloc/modify-bloc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"idBloc\":1,\"nomBloc\":\"Bloc A\",\"capaciteBloc\":100}"))
                 .andExpect(status().isOk())

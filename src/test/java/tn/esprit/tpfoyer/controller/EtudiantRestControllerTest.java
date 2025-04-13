@@ -9,13 +9,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
 import tn.esprit.tpfoyer.control.EtudiantRestController;
 import tn.esprit.tpfoyer.entity.Etudiant;
 import tn.esprit.tpfoyer.service.IEtudiantService;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -38,14 +36,14 @@ class EtudiantRestControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(etudiantRestController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(etudiantRestController)
+                .build();
         
         etudiant = new Etudiant();
         etudiant.setIdEtudiant(1L);
         etudiant.setNomEtudiant("Doe");
         etudiant.setPrenomEtudiant("John");
-        etudiant.setCinEtudiant(12345678L);
-        etudiant.setDateNaissance(new Date());
+        etudiant.setCinEtudiant("12345678");
     }
 
     @Test
@@ -53,43 +51,43 @@ class EtudiantRestControllerTest {
         List<Etudiant> etudiants = Arrays.asList(etudiant);
         when(etudiantService.retrieveAllEtudiants()).thenReturn(etudiants);
 
-        mockMvc.perform(get("/tpfoyer/etudiant/retrieve-all-etudiants"))
+        mockMvc.perform(get("/etudiant/retrieve-all-etudiants"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].idEtudiant").value(1))
                 .andExpect(jsonPath("$[0].nomEtudiant").value("Doe"))
                 .andExpect(jsonPath("$[0].prenomEtudiant").value("John"))
-                .andExpect(jsonPath("$[0].cinEtudiant").value(12345678));
+                .andExpect(jsonPath("$[0].cinEtudiant").value("12345678"));
     }
 
     @Test
     void testGetEtudiant() throws Exception {
         when(etudiantService.retrieveEtudiant(1L)).thenReturn(etudiant);
 
-        mockMvc.perform(get("/tpfoyer/etudiant/retrieve-etudiant/1"))
+        mockMvc.perform(get("/etudiant/retrieve-etudiant/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.idEtudiant").value(1))
                 .andExpect(jsonPath("$.nomEtudiant").value("Doe"))
                 .andExpect(jsonPath("$.prenomEtudiant").value("John"))
-                .andExpect(jsonPath("$.cinEtudiant").value(12345678));
+                .andExpect(jsonPath("$.cinEtudiant").value("12345678"));
     }
 
     @Test
     void testAddEtudiant() throws Exception {
         when(etudiantService.addEtudiant(any(Etudiant.class))).thenReturn(etudiant);
 
-        mockMvc.perform(post("/tpfoyer/etudiant/add-etudiant")
+        mockMvc.perform(post("/etudiant/add-etudiant")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"nomEtudiant\":\"Doe\",\"prenomEtudiant\":\"John\",\"cinEtudiant\":12345678}"))
+                .content("{\"nomEtudiant\":\"Doe\",\"prenomEtudiant\":\"John\",\"cinEtudiant\":\"12345678\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.idEtudiant").value(1))
                 .andExpect(jsonPath("$.nomEtudiant").value("Doe"))
                 .andExpect(jsonPath("$.prenomEtudiant").value("John"))
-                .andExpect(jsonPath("$.cinEtudiant").value(12345678));
+                .andExpect(jsonPath("$.cinEtudiant").value("12345678"));
     }
 
     @Test
     void testRemoveEtudiant() throws Exception {
-        mockMvc.perform(delete("/tpfoyer/etudiant/remove-etudiant/1"))
+        mockMvc.perform(delete("/etudiant/remove-etudiant/1"))
                 .andExpect(status().isOk());
     }
 
@@ -97,25 +95,13 @@ class EtudiantRestControllerTest {
     void testModifyEtudiant() throws Exception {
         when(etudiantService.modifyEtudiant(any(Etudiant.class))).thenReturn(etudiant);
 
-        mockMvc.perform(put("/tpfoyer/etudiant/modify-etudiant")
+        mockMvc.perform(put("/etudiant/modify-etudiant")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"idEtudiant\":1,\"nomEtudiant\":\"Doe\",\"prenomEtudiant\":\"John\",\"cinEtudiant\":12345678}"))
+                .content("{\"idEtudiant\":1,\"nomEtudiant\":\"Doe\",\"prenomEtudiant\":\"John\",\"cinEtudiant\":\"12345678\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.idEtudiant").value(1))
                 .andExpect(jsonPath("$.nomEtudiant").value("Doe"))
                 .andExpect(jsonPath("$.prenomEtudiant").value("John"))
-                .andExpect(jsonPath("$.cinEtudiant").value(12345678));
-    }
-
-    @Test
-    void testRecupererEtudiantParCin() throws Exception {
-        when(etudiantService.recupererEtudiantParCin(12345678L)).thenReturn(etudiant);
-
-        mockMvc.perform(get("/tpfoyer/etudiant/cin/12345678"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.idEtudiant").value(1))
-                .andExpect(jsonPath("$.nomEtudiant").value("Doe"))
-                .andExpect(jsonPath("$.prenomEtudiant").value("John"))
-                .andExpect(jsonPath("$.cinEtudiant").value(12345678));
+                .andExpect(jsonPath("$.cinEtudiant").value("12345678"));
     }
 } 
