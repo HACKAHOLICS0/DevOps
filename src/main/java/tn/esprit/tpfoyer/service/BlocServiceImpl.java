@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import tn.esprit.tpfoyer.entity.Bloc;
 import tn.esprit.tpfoyer.repository.BlocRepository;
+import tn.esprit.tpfoyer.repository.FoyerRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ public class BlocServiceImpl  implements IBlocService {
 
 
     BlocRepository blocRepository;
+    FoyerRepository foyerRepository;
 
     @Scheduled(fixedRate = 30000) // millisecondes // cron fixedRate
     //@Scheduled(cron="0/15 * * * * *")
