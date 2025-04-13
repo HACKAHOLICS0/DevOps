@@ -13,17 +13,14 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Universite {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long idUniversite;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  long idUniversite;
 
-    String nomUniversite;
+  String nomUniversite;
 
-    String adresse;
+  String adresse;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    Foyer foyer;
-
+  @OneToOne(cascade = CascadeType.ALL)
+  Foyer foyer;
 }
-
-

@@ -1,12 +1,9 @@
 package tn.esprit.tpfoyer.entity;
 
-
 import jakarta.persistence.*;
+import java.util.Set;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Set;
-
 
 @Entity
 @Getter
@@ -17,21 +14,17 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Chambre {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long idChambre;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  long idChambre;
 
-    long numeroChambre;
+  long numeroChambre;
 
-    @Enumerated(EnumType.STRING)
-    TypeChambre typeC;
+  @Enumerated(EnumType.STRING)
+  TypeChambre typeC;
 
+  @OneToMany Set<Reservation> reservations;
 
-
-    @OneToMany
-    Set<Reservation> reservations;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    Bloc bloc;
-
+  @ManyToOne(cascade = CascadeType.ALL)
+  Bloc bloc;
 }

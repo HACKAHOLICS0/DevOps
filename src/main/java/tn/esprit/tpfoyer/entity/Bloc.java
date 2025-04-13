@@ -2,12 +2,10 @@ package tn.esprit.tpfoyer.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.util.HashSet;
 import java.util.Set;
-
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
@@ -18,20 +16,18 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Bloc {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long idBloc;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  long idBloc;
 
-    String nomBloc;
-    long capaciteBloc;
+  String nomBloc;
+  long capaciteBloc;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    Foyer foyer;
+  @ManyToOne(cascade = CascadeType.ALL)
+  Foyer foyer;
 
-    @OneToMany(mappedBy = "bloc")
-    @JsonIgnore
-    @ToString.Exclude
-    Set<Chambre> chambres = new HashSet<Chambre>();
-
+  @OneToMany(mappedBy = "bloc")
+  @JsonIgnore
+  @ToString.Exclude
+  Set<Chambre> chambres = new HashSet<Chambre>();
 }
-

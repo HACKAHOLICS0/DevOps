@@ -1,17 +1,20 @@
 package tn.esprit.tpfoyer.service;
 
-import tn.esprit.tpfoyer.entity.Universite;
-
 import java.util.List;
+import tn.esprit.tpfoyer.entity.Universite;
 
 public interface IUniversiteService {
 
-    public List<Universite> retrieveAllUniversites();
-    public Universite retrieveUniversite(Long universiteId);
-    public Universite addUniversite(Universite f);
-    public void removeUniversite(Long universiteId);
-    public Universite modifyUniversite(Universite universite);
+  public List<Universite> retrieveAllUniversites();
 
-    // Here we will add later methods calling keywords and methods calling JPQL
+  public Universite retrieveUniversite(Long universiteId);
+
+  public Universite addUniversite(Universite f);
+
+  public void removeUniversite(Long universiteId);
+
+  public Universite modifyUniversite(Universite universite);
+
+  // Here we will add later methods calling keywords and methods calling JPQL
 
 }

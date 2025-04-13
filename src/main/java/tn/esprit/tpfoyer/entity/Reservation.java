@@ -1,12 +1,10 @@
 package tn.esprit.tpfoyer.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.util.Date;
 import java.util.Set;
-
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
@@ -17,32 +15,14 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Reservation {
 
-    @Id
-    String idReservation;
+  @Id String idReservation;
 
+  Date anneeUniversitaire;
+  boolean estValide;
 
-    Date anneeUniversitaire;
-    boolean estValide;
+  @ManyToMany Set<Etudiant> etudiants;
 
-
-
-
-
-
-
-
-
-
-
-    @ManyToMany
-    Set<Etudiant> etudiants;
-
-
-
-
-    /*@ToString.Exclude
-    @JsonIgnore*/
+  /*@ToString.Exclude
+  @JsonIgnore*/
 
 }
-
-
