@@ -3,7 +3,7 @@ version: '3'
 services:
   mysql-db:
     image: mysql:8
-    container_name: mysql-tpfoyer
+    container_name: mysql-tpfoyer-v2
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -11,15 +11,15 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     ports:
-      - "3306:3306"
+      - "3307:3306"  # change si 3306 est déjà pris
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql_data_v2:/var/lib/mysql
     networks:
-      - tpfoyer-network
+      - tpfoyer-network-v2
 
   tp-foyer-app:
     image: ikramsegni/tp-foyer-app:1.0.0
-    container_name: tp-foyer-app
+    container_name: tp-foyer-app-v2
     restart: always
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/tpfoyerdb?createDatabaseIfNotExist=true
@@ -27,38 +27,38 @@ services:
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
     ports:
-      - "8089:8089"  # Spring Boot app listening on 8089
+      - "8090:8089"
     depends_on:
       - mysql-db
     networks:
-      - tpfoyer-network
+      - tpfoyer-network-v2
 
   prometheus:
     image: prom/prometheus
-    container_name: prometheus
+    container_name: prometheus-v2
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
-      - "9090:9090"  # Prometheus server
+      - "9091:9090"
     networks:
-      - tpfoyer-network
+      - tpfoyer-network-v2
     depends_on:
       - tp-foyer-app
 
   grafana:
     image: grafana/grafana
-    container_name: grafana
+    container_name: grafana-v2
     ports:
-      - "3000:3000"  # Grafana UI
+      - "3001:3000"
     networks:
-      - tpfoyer-network
+      - tpfoyer-network-v2
     depends_on:
       - prometheus
 
 networks:
-  tpfoyer-network:
+  tpfoyer-network-v2:
     driver: bridge
 
 volumes:
-  mysql_data:
+  mysql_data_v2:
     driver: local
