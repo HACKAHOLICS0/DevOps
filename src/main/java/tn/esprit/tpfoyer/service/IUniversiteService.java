@@ -11,6 +11,7 @@ public interface IUniversiteService {
     public Universite addUniversite(Universite f);
     public void removeUniversite(Long universiteId);
     public Universite modifyUniversite(Universite universite);
+    public Universite affecterFoyerAUniversite(Long idUniversite, Long idFoyer);
 
     // Here we will add later methods calling keywords and methods calling JPQL
 

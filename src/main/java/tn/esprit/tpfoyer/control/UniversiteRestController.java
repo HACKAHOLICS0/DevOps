@@ -10,6 +10,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/universite")
+@CrossOrigin(origins = "http://localhost:4200")
 public class UniversiteRestController {
 
     IUniversiteService universiteService;
@@ -47,4 +48,11 @@ public class UniversiteRestController {
         return universite;
     }
 
+    // http://localhost:8089/tpfoyer/universite/{universite-id}/foyer/{foyer-id}
+    @PutMapping("/{universite-id}/foyer/{foyer-id}")
+    public Universite affecterFoyerAUniversite(
+            @PathVariable("universite-id") Long idUniversite,
+            @PathVariable("foyer-id") Long idFoyer) {
+        return universiteService.affecterFoyerAUniversite(idUniversite, idFoyer);
+    }
 }
