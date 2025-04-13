@@ -9,6 +9,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.InOrder;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
+import tn.esprit.tpfoyer.config.DuplicateReservationException;
+import tn.esprit.tpfoyer.config.ReservationNotFoundException;
 import tn.esprit.tpfoyer.entity.Reservation;
 import tn.esprit.tpfoyer.repository.ReservationRepository;
 
@@ -19,6 +24,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
 
 @ExtendWith(MockitoExtension.class)
 public class ReservationServiceImplTest {
@@ -174,4 +180,117 @@ public class ReservationServiceImplTest {
         assertEquals("SPY123", result.getIdReservation());
         verify(spyReservation, atLeastOnce()).getIdReservation();
     }
-} 
+    // Scenario 1: Test remove reservation when not found
+    @Test
+    void testRemoveReservation_WhenNotFound() {
+        // Arrange
+        String nonExistentId = "NONEXISTENT";
+        doThrow(new RuntimeException("Reservation not found")).when(reservationRepository).deleteById(nonExistentId);
+
+        // Act & Assert
+        assertThrows(RuntimeException.class, () -> {
+            reservationService.removeReservation(nonExistentId);
+        });
+        verify(reservationRepository).deleteById(nonExistentId);
+    }
+
+    // Scenario 2: Test modify reservation with invalid data
+    @Test
+    void testModifyReservation_WithInvalidData() {
+        // Arrange
+        Reservation invalidReservation = new Reservation();
+        invalidReservation.setIdReservation(null); // ID manquant
+        invalidReservation.setAnneeUniversitaire(null); // Date manquante
+
+        when(reservationRepository.save(any(Reservation.class))).thenThrow(new RuntimeException("Invalid reservation data"));
+
+        // Act & Assert
+        assertThrows(RuntimeException.class, () -> {
+            reservationService.modifyReservation(invalidReservation);
+        });
+        verify(reservationRepository, times(1)).save(invalidReservation);
+    }
+
+    // Scenario 3: Test retrieve valid reservations by year
+    @Test
+    void testRetrieveValidReservationsByYear() {
+        // Arrange
+        Date specificYear = new Date(); // Une date spécifique pour l'année universitaire
+        Reservation reservation1 = new Reservation();
+        reservation1.setAnneeUniversitaire(specificYear);
+        reservation1.setEstValide(true);
+
+        Reservation reservation2 = new Reservation();
+        reservation2.setAnneeUniversitaire(specificYear);
+        reservation2.setEstValide(true);
+
+        List<Reservation> reservations = Arrays.asList(reservation1, reservation2);
+        when(reservationRepository.findAllByAnneeUniversitaireAndEstValide((specificYear), true)).thenReturn(reservations);
+
+        // Act
+        List<Reservation> result = reservationService.retrieveValidReservationsByYear(specificYear);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertTrue(result.stream().allMatch(r -> r.isEstValide()));
+    }
+
+    // Scenario 4: Test retrieve reservation with custom exception
+    @Test
+    void testRetrieveReservation_WithCustomException() {
+        String reservationId = "NON_EXISTENT_ID";
+        when(reservationRepository.findById(reservationId)).thenReturn(Optional.empty());
+
+        assertThrows(ReservationNotFoundException.class, () -> {
+            reservationService.retrieveReservation(reservationId);
+        });
+    }
+
+
+    // Scenario 5: Test add reservation with existing data
+    @Test
+    void testAddReservation_WithExistingId() {
+        Reservation existingReservation = new Reservation();
+        existingReservation.setIdReservation("RES123");
+
+        when(reservationRepository.existsById(existingReservation.getIdReservation())).thenReturn(true);
+
+        assertThrows(DuplicateReservationException.class, () -> {
+            reservationService.addReservation(existingReservation);
+        });
+    }
+
+
+    // Scenario 6: Test retrieve all reservations with an empty list
+    @Test
+    void testRetrieveAllReservations_WithEmptyList() {
+        // Arrange
+        when(reservationRepository.findAll()).thenReturn(Arrays.asList());
+
+        // Act
+        List<Reservation> result = reservationService.retrieveAllReservations();
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(reservationRepository).findAll();
+    }
+
+    // Scenario 7: Test multiple method calls in order
+    @Test
+    void testMultipleMethodCallsInOrder() {
+        // Arrange
+        when(reservationRepository.save(any(Reservation.class))).thenReturn(testReservation);
+        when(reservationRepository.findById(testReservation.getIdReservation())).thenReturn(Optional.of(testReservation));
+
+        // Act
+        reservationService.addReservation(testReservation);
+        reservationService.retrieveReservation(testReservation.getIdReservation());
+
+        // Assert - Vérification de l'ordre des appels
+        InOrder inOrder = inOrder(reservationRepository);
+        inOrder.verify(reservationRepository).save(any(Reservation.class));
+        inOrder.verify(reservationRepository).findById(anyString());
+    }
+}

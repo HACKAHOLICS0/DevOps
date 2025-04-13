@@ -23,6 +23,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
 
     List<Reservation> findAllByAnneeUniversitaireBeforeAndEstValide(Date d, boolean b );
 
+    List<Reservation> findAllByAnneeUniversitaireAndEstValide(Date anneeUniversitaire, boolean estValide);
 }
 
 
