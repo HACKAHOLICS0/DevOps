@@ -104,4 +104,40 @@ class EtudiantRestControllerTest {
                 .andExpect(jsonPath("$.prenomEtudiant").value("John"))
                 .andExpect(jsonPath("$.cinEtudiant").value(12345678));
     }
+
+    @Test
+    void testGetEtudiantParCin() throws Exception {
+        when(etudiantService.recupererEtudiantParCin(12345678L)).thenReturn(etudiant);
+
+        mockMvc.perform(get("/etudiant/retrieve-etudiant-cin/12345678"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.idEtudiant").value(1))
+                .andExpect(jsonPath("$.cinEtudiant").value(12345678));
+    }
+
+    @Test
+    void testGetEtudiants_EmptyList() throws Exception {
+        when(etudiantService.retrieveAllEtudiants()).thenReturn(Arrays.asList());
+
+        mockMvc.perform(get("/etudiant/retrieve-all-etudiants"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
+    }
+
+    @Test
+    void testGetEtudiant_NotFound() throws Exception {
+        when(etudiantService.retrieveEtudiant(999L)).thenReturn(null);
+
+        mockMvc.perform(get("/etudiant/retrieve-etudiant/999"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testGetEtudiantParCin_NotFound() throws Exception {
+        when(etudiantService.recupererEtudiantParCin(99999999L)).thenReturn(null);
+
+        mockMvc.perform(get("/etudiant/retrieve-etudiant-cin/99999999"))
+                .andExpect(status().isOk());
+    }
 } 

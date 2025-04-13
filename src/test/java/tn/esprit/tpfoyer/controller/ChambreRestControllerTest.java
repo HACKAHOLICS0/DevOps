@@ -108,4 +108,41 @@ class ChambreRestControllerTest {
                 .andExpect(jsonPath("$.numeroChambre").value(101))
                 .andExpect(jsonPath("$.typeC").value("SIMPLE"));
     }
+
+    @Test
+    void testTrouverChSelonTC() throws Exception {
+        List<Chambre> chambres = Arrays.asList(chambre);
+        when(chambreService.recupererChambresSelonTyp(TypeChambre.SIMPLE)).thenReturn(chambres);
+
+        mockMvc.perform(get("/chambre/trouver-chambres-selon-typ/SIMPLE"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].typeC").value("SIMPLE"));
+    }
+
+    @Test
+    void testTrouverChSelonEt() throws Exception {
+        when(chambreService.trouverchambreSelonEtudiant(12345678L)).thenReturn(chambre);
+
+        mockMvc.perform(get("/chambre/trouver-chambre-selon-etudiant/12345678"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.idChambre").value(1));
+    }
+
+    @Test
+    void testGetChambres_EmptyList() throws Exception {
+        when(chambreService.retrieveAllChambres()).thenReturn(Arrays.asList());
+
+        mockMvc.perform(get("/chambre/retrieve-all-chambres"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
+    }
+
+    @Test
+    void testGetChambre_NotFound() throws Exception {
+        when(chambreService.retrieveChambre(999L)).thenReturn(null);
+
+        mockMvc.perform(get("/chambre/retrieve-chambre/999"))
+                .andExpect(status().isOk());
+    }
 } 

@@ -203,4 +203,66 @@ class UniversiteServiceImplTest {
         assertNotNull(savedUniversite);
         verify(universiteRepository, times(1)).save(any(Universite.class));
     }
+
+    @Test
+    void testRetrieveUniversite_ThrowsException() {
+        when(universiteRepository.findById(1L)).thenReturn(Optional.empty());
+        
+        RuntimeException exception = assertThrows(RuntimeException.class,
+            () -> universiteService.retrieveUniversite(1L));
+        
+        verify(universiteRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void testRetrieveAllUniversites_EmptyList() {
+        when(universiteRepository.findAll()).thenReturn(Arrays.asList());
+
+        List<Universite> result = universiteService.retrieveAllUniversites();
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(universiteRepository, times(1)).findAll();
+    }
+
+    @Test
+    void testModifyUniversite_WithNewValues() {
+        Universite newUniversite = new Universite();
+        newUniversite.setIdUniversite(1L);
+        newUniversite.setNomUniversite("Updated University");
+        newUniversite.setAdresse("456 New St");
+
+        when(universiteRepository.save(any(Universite.class))).thenReturn(newUniversite);
+
+        Universite result = universiteService.modifyUniversite(newUniversite);
+
+        assertNotNull(result);
+        assertEquals("Updated University", result.getNomUniversite());
+        assertEquals("456 New St", result.getAdresse());
+        verify(universiteRepository, times(1)).save(any(Universite.class));
+    }
+
+    @Test
+    void testAffecterFoyerAUniversite_WithExistingFoyer() {
+        Universite universite = new Universite();
+        universite.setIdUniversite(1L);
+        Foyer existingFoyer = new Foyer();
+        existingFoyer.setIdFoyer(2L);
+        universite.setFoyer(existingFoyer);
+
+        Foyer newFoyer = new Foyer();
+        newFoyer.setIdFoyer(3L);
+
+        when(universiteRepository.findById(1L)).thenReturn(Optional.of(universite));
+        when(foyerRepository.findById(3L)).thenReturn(Optional.of(newFoyer));
+        when(universiteRepository.save(any(Universite.class))).thenReturn(universite);
+
+        Universite result = universiteService.affecterFoyerAUniversite(1L, 3L);
+
+        assertNotNull(result);
+        assertEquals(newFoyer, result.getFoyer());
+        verify(universiteRepository, times(1)).findById(1L);
+        verify(foyerRepository, times(1)).findById(3L);
+        verify(universiteRepository, times(1)).save(any(Universite.class));
+    }
 } 
