@@ -7,6 +7,7 @@ import tn.esprit.tpfoyer.entity.Universite;
 import tn.esprit.tpfoyer.repository.UniversiteRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -33,5 +34,10 @@ public class UniversiteServiceImpl implements IUniversiteService {
 
     public void removeUniversite(Long universiteId) {
         universiteRepository.deleteById(universiteId);
+    }
+
+    public Universite retrieveUniversiteByNom(String nom) {
+        Optional<Universite> universite = universiteRepository.findUniversiteByNom(nom);
+        return universite.orElseThrow(() -> new RuntimeException("Universite not found with name: " + nom));
     }
 }

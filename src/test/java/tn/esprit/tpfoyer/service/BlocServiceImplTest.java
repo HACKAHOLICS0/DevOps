@@ -11,8 +11,9 @@ import tn.esprit.tpfoyer.repository.BlocRepository;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
- class BlocServiceImplTest {
+class BlocServiceImplTest {
 
     @Mock
     private BlocRepository blocRepository;
@@ -89,6 +90,34 @@ import java.util.List;
          assertEquals("Bloc not found with id: 99", exception.getMessage());
          verify(blocRepository, times(1)).findById(blocId);
      }
+     @Test
+     void testGetBlocByNom() {
+         Bloc bloc = new Bloc();
+         bloc.setIdBloc(1L);
+         bloc.setNomBloc("Bloc A");
+
+         when(blocRepository.findByNomBloc("Bloc A")).thenReturn(Optional.of(bloc));
+
+         Bloc result = blocService.getBlocByNom("Bloc A");
+
+         assertNotNull(result);
+         assertEquals("Bloc A", result.getNomBloc());
+         verify(blocRepository, times(1)).findByNomBloc("Bloc A");
+     }
 
 
- }
+    @Test
+    void testGetBlocByNomThrowsException() {
+        when(blocRepository.findByNomBloc("Bloc X")).thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            blocService.getBlocByNom("Bloc X");
+        });
+
+        assertEquals("Bloc not found with name: Bloc X", exception.getMessage());
+        verify(blocRepository, times(1)).findByNomBloc("Bloc X");
+    }
+
+
+
+}

@@ -53,7 +53,12 @@ public class BlocServiceImpl  implements IBlocService {
         return blocRepository.findById(blocId)
                 .orElseThrow(() -> new RuntimeException("Bloc not found with id: " + blocId));
     }
+    @Transactional
 
+    public Bloc getBlocByNom(String nomBloc) {
+        return blocRepository.findByNomBloc(nomBloc)
+                .orElseThrow(() -> new RuntimeException("Bloc not found with name: " + nomBloc));
+    }
 
 
     public Bloc addBloc(Bloc c) {
@@ -78,5 +83,8 @@ public class BlocServiceImpl  implements IBlocService {
     public List<Bloc> trouverBlocsParNomEtCap(String nb, long c) {
         return blocRepository.findAllByNomBlocAndCapaciteBloc(nb,  c);
     }
+
+
+
 
 }

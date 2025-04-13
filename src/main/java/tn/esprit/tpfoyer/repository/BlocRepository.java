@@ -6,18 +6,7 @@ import org.springframework.stereotype.Repository;
 import tn.esprit.tpfoyer.entity.Bloc;
 
 import java.util.List;
-
-
-
-
-
-
-
-
-
-
-
-
+import java.util.Optional;
 
 
 @Repository
@@ -69,7 +58,7 @@ import java.util.List;
     List<Bloc> findAllByNomBlocAndCapaciteBloc (String nom , long capacite );
 
 
-    Bloc findByNomBloc (String nom);
+ Optional<Bloc> findByNomBloc(String nomBloc);
 
 
 
