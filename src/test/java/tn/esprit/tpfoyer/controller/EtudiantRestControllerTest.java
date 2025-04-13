@@ -43,7 +43,7 @@ class EtudiantRestControllerTest {
         etudiant.setIdEtudiant(1L);
         etudiant.setNomEtudiant("Doe");
         etudiant.setPrenomEtudiant("John");
-        etudiant.setCinEtudiant("12345678");
+        etudiant.setCinEtudiant(12345678L);
     }
 
     @Test
@@ -56,7 +56,7 @@ class EtudiantRestControllerTest {
                 .andExpect(jsonPath("$[0].idEtudiant").value(1))
                 .andExpect(jsonPath("$[0].nomEtudiant").value("Doe"))
                 .andExpect(jsonPath("$[0].prenomEtudiant").value("John"))
-                .andExpect(jsonPath("$[0].cinEtudiant").value("12345678"));
+                .andExpect(jsonPath("$[0].cinEtudiant").value(12345678));
     }
 
     @Test
@@ -68,7 +68,7 @@ class EtudiantRestControllerTest {
                 .andExpect(jsonPath("$.idEtudiant").value(1))
                 .andExpect(jsonPath("$.nomEtudiant").value("Doe"))
                 .andExpect(jsonPath("$.prenomEtudiant").value("John"))
-                .andExpect(jsonPath("$.cinEtudiant").value("12345678"));
+                .andExpect(jsonPath("$.cinEtudiant").value(12345678));
     }
 
     @Test
@@ -77,12 +77,12 @@ class EtudiantRestControllerTest {
 
         mockMvc.perform(post("/etudiant/add-etudiant")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"nomEtudiant\":\"Doe\",\"prenomEtudiant\":\"John\",\"cinEtudiant\":\"12345678\"}"))
+                .content("{\"nomEtudiant\":\"Doe\",\"prenomEtudiant\":\"John\",\"cinEtudiant\":12345678}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.idEtudiant").value(1))
                 .andExpect(jsonPath("$.nomEtudiant").value("Doe"))
                 .andExpect(jsonPath("$.prenomEtudiant").value("John"))
-                .andExpect(jsonPath("$.cinEtudiant").value("12345678"));
+                .andExpect(jsonPath("$.cinEtudiant").value(12345678));
     }
 
     @Test
@@ -97,11 +97,11 @@ class EtudiantRestControllerTest {
 
         mockMvc.perform(put("/etudiant/modify-etudiant")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"idEtudiant\":1,\"nomEtudiant\":\"Doe\",\"prenomEtudiant\":\"John\",\"cinEtudiant\":\"12345678\"}"))
+                .content("{\"idEtudiant\":1,\"nomEtudiant\":\"Doe\",\"prenomEtudiant\":\"John\",\"cinEtudiant\":12345678}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.idEtudiant").value(1))
                 .andExpect(jsonPath("$.nomEtudiant").value("Doe"))
                 .andExpect(jsonPath("$.prenomEtudiant").value("John"))
-                .andExpect(jsonPath("$.cinEtudiant").value("12345678"));
+                .andExpect(jsonPath("$.cinEtudiant").value(12345678));
     }
 } 
