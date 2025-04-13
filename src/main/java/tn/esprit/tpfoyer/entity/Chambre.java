@@ -25,12 +25,12 @@ public class Chambre {
     @Enumerated(EnumType.STRING)
     TypeChambre typeC;
 
-    @OneToMany(mappedBy = "chambre", cascade = CascadeType.ALL)
-    @JsonIgnore
+
+
+    @OneToMany
     Set<Reservation> reservations;
 
-    @ManyToOne
-    @JoinColumn(name = "bloc_id")
-    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL)
     Bloc bloc;
+
 }
