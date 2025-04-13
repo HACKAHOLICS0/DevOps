@@ -56,4 +56,39 @@ import java.util.List;
         assertNotNull(result);
         verify(blocRepository, times(1)).findById(blocId);
     }
-}
+     @Test
+     void testUpdateBloc() {
+         Bloc bloc = new Bloc();
+         bloc.setIdBloc(1L);
+         bloc.setNomBloc("Bloc A");
+
+         when(blocRepository.save(bloc)).thenReturn(bloc);
+
+         Bloc updatedBloc = blocService.modifyBloc(bloc);
+
+         assertEquals("Bloc A", updatedBloc.getNomBloc());
+         verify(blocRepository, times(1)).save(bloc);
+     }
+     @Test
+     void testRemoveBloc() {
+         Long idBloc = 1L;
+
+         blocService.removeBloc(idBloc);
+
+         verify(blocRepository, times(1)).deleteById(idBloc);
+     }
+     @Test
+     void testRetrieveBlocNotFound() {
+         Long blocId = 99L;
+         when(blocRepository.findById(blocId)).thenReturn(java.util.Optional.empty());
+
+         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+             blocService.retrieveBloc(blocId);
+         });
+
+         assertEquals("Bloc not found with id: 99", exception.getMessage());
+         verify(blocRepository, times(1)).findById(blocId);
+     }
+
+
+ }
