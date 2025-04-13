@@ -93,7 +93,8 @@ class UniversiteServiceImplTest {
     void testRetrieveUniversite_NotFound() {
         when(universiteRepository.findById(1L)).thenReturn(Optional.empty());
 
-
+        assertThrows(RuntimeException.class,
+            () -> universiteService.retrieveUniversite(1L));
 
         verify(universiteRepository, times(1)).findById(1L);
     }
