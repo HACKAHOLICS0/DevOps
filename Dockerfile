@@ -9,6 +9,5 @@ ADD target/tp-foyer-1.0.0.jar app.jar
 
 # Exposer le port de l’application (même que dans application.properties)
 EXPOSE 8089
-
 # Commande pour exécuter l’application
 ENTRYPOINT ["java", "-jar", "app.jar"]
