@@ -20,6 +20,7 @@ public class BlocServiceImpl  implements IBlocService {
 
 
     BlocRepository blocRepository;
+    FoyerRepository foyerRepository;
 
     @Scheduled(fixedRate = 30000) // millisecondes // cron fixedRate
     //@Scheduled(cron="0/15 * * * * *")
