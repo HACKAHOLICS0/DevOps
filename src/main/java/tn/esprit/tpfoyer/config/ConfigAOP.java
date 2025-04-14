@@ -27,6 +27,8 @@ public class ConfigAOP {
     }
 
 
+
+
     @Around("execution(* tn.esprit.tpfoyer.service.*.*(..))")
     public Object profile(ProceedingJoinPoint pjp) throws Throwable
     {
